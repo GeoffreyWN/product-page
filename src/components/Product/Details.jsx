@@ -1,19 +1,37 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
-const FeatureList = ({ feature }) => <CustomButton>{feature}</CustomButton>;
+const FeatureList = ({ feature, selectedFeature }) => {
+  return <CustomButton onClick={selectedFeature}>{feature}</CustomButton>;
+};
 
 const Details = ({ title, description, colorOptions, featureList }) => {
   const [featureImage, setFeatureImage] = useState(colorOptions[0]);
   const [active, setActive] = useState(false);
+  const [showTimeFeature, setShowTimeFeature] = useState(true);
+
+  const selectedFeature = (i) => {
+    setShowTimeFeature(!showTimeFeature);
+  };
 
   return (
     <>
       <ImageContainer>
         <img src={featureImage.imageUrl} alt="" />
-        <TimeTitle>
-          {new Date().getHours()}:{new Date().getMinutes()}
-        </TimeTitle>
+
+        {showTimeFeature ? (
+          <TimeContainer>
+            <TimeTitle>
+              {new Date().getHours()}:{new Date().getMinutes()}
+            </TimeTitle>
+          </TimeContainer>
+        ) : (
+          <HeartRateContainer>
+            <i className="fas fa-heartbeat"></i>
+            <p>82</p>
+          </HeartRateContainer>
+        )}
+
         <ImageTitle>{featureImage.styleName}</ImageTitle>
       </ImageContainer>
 
@@ -47,7 +65,13 @@ const Details = ({ title, description, colorOptions, featureList }) => {
 
         <FeatureContainer>
           {featureList.map((feature, i) => (
-            <FeatureList key={i} feature={feature} />
+            <FeatureList
+              key={i}
+              feature={feature}
+              selectedFeature={() => {
+                selectedFeature(i);
+              }}
+            />
           ))}
         </FeatureContainer>
       </DetailsContainer>
@@ -61,15 +85,49 @@ const ImageContainer = styled.div`
   flex: 0.4;
   text-align: center;
   box-sizing: center;
-  /* border: 1px solid red; */
+  position: relative;
   > img {
-    height: 350px;
+    width: 100%;
+  }
+`;
+
+const TimeContainer = styled.div`
+  position: absolute;
+  top: 44%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  font-weight: 600;
+`;
+
+const heartbeat = keyframes`
+  0% { transform: scale(1, 1) }
+    
+  50% { transform: scale(1.2, 1.2) }
+    
+  100% { transform: scale(1, 1) }
+`;
+
+const HeartRateContainer = styled.div`
+  position: absolute;
+  top: 44%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 25px;
+  font-weight: 600;
+  color: white;
+  > i {
+    font-size: 45px;
+    color: red;
+    animation-name: ${heartbeat};
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
   }
 `;
 
 const TimeTitle = styled.h1`
   /* font-size: 18px; */
-  color: red;
+  color: white;
 `;
 const ImageTitle = styled.p`
   font-size: 18px;
