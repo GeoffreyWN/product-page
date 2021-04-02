@@ -4,7 +4,7 @@
 
 cd into the project directory, install packages and dependencies, finally run app:
 
-### ` cd /project-directory/`
+### ` cd project-directory`
 ### `npm install`
 ### `npm run`
 
