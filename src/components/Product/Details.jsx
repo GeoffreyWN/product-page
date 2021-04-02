@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
 
-const FeatureList = ({ feature, selectedFeature }) => {
-  return <CustomButton onClick={selectedFeature}>{feature}</CustomButton>;
+const FeatureList = ({ feature, selectedFeature, featureItem }) => {
+  const activeBtn = {backgroundColor: 'gray', color:'white'}
+
+  return <CustomButton style={featureItem === feature ? activeBtn : null} onClick={selectedFeature}>{feature}</CustomButton>;
 };
 
 const Details = ({ title, description, colorOptions, featureList }) => {
   const [featureImage, setFeatureImage] = useState(colorOptions[0]);
-  const [active, setActive] = useState(false);
-  const [showTimeFeature, setShowTimeFeature] = useState(true);
+  const [featureItem, setFeatureItem] = useState(featureList[0]);
 
   const selectedFeature = (i) => {
-    setShowTimeFeature(!showTimeFeature);
+    setFeatureItem(featureList[i])
   };
 
   return (
@@ -19,7 +20,7 @@ const Details = ({ title, description, colorOptions, featureList }) => {
       <ImageContainer>
         <img src={featureImage.imageUrl} alt="" />
 
-        {showTimeFeature ? (
+        {featureItem === featureList[0] ? (
           <TimeContainer>
             <TimeTitle>
               {new Date().getHours()}:{new Date().getMinutes()}
@@ -47,7 +48,6 @@ const Details = ({ title, description, colorOptions, featureList }) => {
               key={i}
               src={color.imageUrl}
               alt={color.styleName}
-              active={active}
               style={
                 featureImage === colorOptions[i]
                   ? { border: "2px solid green" }
@@ -55,7 +55,6 @@ const Details = ({ title, description, colorOptions, featureList }) => {
               }
               onClick={() => {
                 setFeatureImage(colorOptions[i]);
-                setActive(true);
               }}
             />
           ))}
@@ -68,12 +67,16 @@ const Details = ({ title, description, colorOptions, featureList }) => {
             <FeatureList
               key={i}
               feature={feature}
+              featureItem={featureItem}
               selectedFeature={() => {
                 selectedFeature(i);
               }}
             />
           ))}
         </FeatureContainer>
+        <BuyContainer>
+          <button onClick={() => alert('Sorry Mate, out of stock')}>Buy Now</button>
+        </BuyContainer>
       </DetailsContainer>
     </>
   );
@@ -93,7 +96,7 @@ const ImageContainer = styled.div`
 
 const TimeContainer = styled.div`
   position: absolute;
-  top: 44%;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 20px;
@@ -110,18 +113,21 @@ const heartbeat = keyframes`
 
 const HeartRateContainer = styled.div`
   position: absolute;
-  top: 44%;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 25px;
   font-weight: 600;
   color: white;
   > i {
-    font-size: 45px;
+    font-size: 50px;
     color: red;
     animation-name: ${heartbeat};
     animation-duration: 1s;
     animation-iteration-count: infinite;
+  }
+  > p{
+    margin: 10px 0Px 0px  0px;
+    font-size: 45px;
   }
 `;
 
@@ -169,7 +175,7 @@ const FeatureContainer = styled.div`
 
 const CustomButton = styled.button`
   font-weight: bold;
-  padding: 10px;
+  padding: 10px 20px;
   background-color: lightgray;
   border: none;
   outline: none;
@@ -177,3 +183,18 @@ const CustomButton = styled.button`
   border-radius: 5px;
   margin-right: 10%;
 `;
+
+const BuyContainer = styled.div`
+  margin: 20px 0px;
+  >button {
+    font-weight: bold;
+    padding: 10px;
+    background-color: #009688;
+    color:white;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-right: 10%;
+  }
+`
